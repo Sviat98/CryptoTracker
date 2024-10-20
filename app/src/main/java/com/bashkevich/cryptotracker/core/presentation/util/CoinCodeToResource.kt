@@ -1,4 +1,4 @@
-package com.bashkevich.cryptotracker.util
+package com.bashkevich.cryptotracker.core.presentation.util
 
 import com.bashkevich.cryptotracker.R
 

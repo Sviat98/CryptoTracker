@@ -1,4 +1,4 @@
-package com.bashkevich.cryptotracker.util
+package com.bashkevich.cryptotracker.core.domain.util
 
 typealias DomainError = Error
 
