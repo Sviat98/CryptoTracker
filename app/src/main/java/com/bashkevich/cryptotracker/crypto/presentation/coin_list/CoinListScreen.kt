@@ -37,6 +37,7 @@ import kotlinx.coroutines.withContext
 fun CoinListScreen(
     modifier: Modifier = Modifier,
     state: CoinListState,
+    onAction: (CoinListAction)-> Unit
 ) {
 
 
@@ -56,7 +57,7 @@ fun CoinListScreen(
                 CoinListItem(
                     modifier = Modifier.fillMaxWidth(),
                     coinUi = coinUi,
-                    onClick = {},
+                    onClick = { onAction(CoinListAction.OnCoinClick(coinUi))},
                 )
                 HorizontalDivider()
             }
@@ -70,9 +71,10 @@ private fun CoinListScreenPreview() {
     CryptoTrackerTheme {
         CoinListScreen(
             state = CoinListState(
-                coins = (1..100).map { previewCoin.toCoinUi() },
+                coins = (1..100).map { previewCoin },
             ),
-            modifier = Modifier.background(color = MaterialTheme.colorScheme.background)
+            modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
+            onAction = {}
         )
     }
 }
