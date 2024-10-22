@@ -1,5 +1,6 @@
 package com.bashkevich.cryptotracker.crypto.data.networking
 
+import com.bashkevich.cryptotracker.core.data.networking.constructUrl
 import com.bashkevich.cryptotracker.core.data.networking.safeCall
 import com.bashkevich.cryptotracker.core.domain.util.NetworkError
 import com.bashkevich.cryptotracker.core.domain.util.Result
@@ -16,7 +17,7 @@ class RemoteCoinDataSource(
 ): CoinDataSource {
     override suspend fun getCoins(): Result<List<Coin>, NetworkError> {
         return safeCall<CoinsResponseDto> {
-            httpClient.get(urlString ="/assets")
+            httpClient.get(urlString =constructUrl("/assets"))
         }.map {response->  response.data.map { it.toCoin() } }
     }
 

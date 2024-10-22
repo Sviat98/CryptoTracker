@@ -7,10 +7,12 @@ import com.bashkevich.cryptotracker.core.domain.util.onSuccess
 import com.bashkevich.cryptotracker.crypto.domain.CoinDataSource
 import com.bashkevich.cryptotracker.crypto.presentation.CoinListState
 import com.bashkevich.cryptotracker.crypto.presentation.models.toCoinUi
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -24,8 +26,11 @@ class CoinListViewModel(
         loadCoins()
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), CoinListState())
 
-    fun onAction(action: CoinListAction){
-        when(action){
+    private val _oneTimeActions = Channel<CoinListOneTimeAction>()
+    val oneTimeActions = _oneTimeActions.receiveAsFlow()
+
+    fun onAction(action: CoinListAction) {
+        when (action) {
             is CoinListAction.OnCoinClick -> {
 
             }
@@ -41,14 +46,14 @@ class CoinListViewModel(
 
             coinDataSource.getCoins().onSuccess { coins ->
                 _state.update {
-                    it.copy(coins = coins.map { coin -> coin.toCoinUi() })
+                    it.copy(isLoading = false, coins = coins.map { coin -> coin.toCoinUi() })
                 }
+            }.onError { error ->
+                _state.update {
+                    it.copy(isLoading = false)
+                }
+                _oneTimeActions.send(CoinListOneTimeAction.Error(error))
             }
-                .onError { error ->
-                    _state.update {
-                        it.copy(isLoading = false)
-                    }
-                }
         }
     }
 }
