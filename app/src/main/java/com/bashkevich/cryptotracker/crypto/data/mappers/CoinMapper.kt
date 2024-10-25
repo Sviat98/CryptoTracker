@@ -6,8 +6,6 @@ import com.bashkevich.cryptotracker.crypto.domain.Coin
 import com.bashkevich.cryptotracker.crypto.domain.CoinPrice
 import java.time.Instant
 import java.time.ZoneId
-import java.time.ZoneOffset
-import java.time.ZonedDateTime
 
 fun CoinDto.toCoin() = Coin(
     id = id,
@@ -21,5 +19,5 @@ fun CoinDto.toCoin() = Coin(
 
 
 fun CoinPriceDto.toCoinPrice(): CoinPrice {
-        return CoinPrice(priceUsd,Instant.ofEpochMilli(dateTime).atZone(ZoneOffset.UTC))
+        return CoinPrice(priceUsd,Instant.ofEpochMilli(dateTime).atZone(ZoneId.systemDefault()))
 }
