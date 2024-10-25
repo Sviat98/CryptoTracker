@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.bashkevich.cryptotracker.core.navigation.AdaptiveCoinListDetailPane
 import com.bashkevich.cryptotracker.core.presentation.util.ObserveAsOneTimeActions
 import com.bashkevich.cryptotracker.core.presentation.util.toString
 import com.bashkevich.cryptotracker.crypto.presentation.coin_detail.CoinDetailScreen
@@ -33,38 +34,10 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val viewModel = koinViewModel<CoinListViewModel>()
 
-                    val state by viewModel.state.collectAsStateWithLifecycle()
-
-                    val context = LocalContext.current
-
-                    val oneTimeActions = viewModel.oneTimeActions
-
-                    ObserveAsOneTimeActions(oneTimeActions) { oneTimeAction ->
-                        when (oneTimeAction) {
-                            is CoinListOneTimeAction.Error -> {
-                                Toast.makeText(
-                                    context,
-                                    oneTimeAction.error.toString(context),
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }
-                        }
-                    }
-                    when {
-                        state.selectedCoin != null -> {
-                            CoinDetailScreen(
-                                state = state,
-                                modifier = Modifier.padding(innerPadding)
-                            )
-                        }
-                        else -> {
-                            CoinListScreen(
-                                state = state,
-                                modifier = Modifier.padding(innerPadding),
-                                onAction = viewModel::onAction
-                            )
-                        }
-                    }
+                    AdaptiveCoinListDetailPane(
+                        modifier = Modifier.padding(innerPadding),
+                        viewModel = viewModel
+                        )
                 }
             }
         }
